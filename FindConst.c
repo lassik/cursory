@@ -20,6 +20,6 @@ int main(void) {
     FIND_LONG(TCSAFLUSH);
     FIND_LONG(TIOCGWINSZ);
     FIND_SIZEOF(struct termios);
-    FIND_SIZEOF(struct ttysize);
+    FIND_SIZEOF(struct winsize);
     return 0;
 }

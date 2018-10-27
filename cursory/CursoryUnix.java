@@ -19,19 +19,19 @@ public class CursoryUnix extends Cursory {
         public static final int TCSAFLUSH = 2;
         public static final int TIOCGWINSZ = 1074295912;
 
-        public static class TtysizeStruct extends Structure {
+        public static class WinsizeStruct extends Structure {
             protected List<String> getFieldOrder() {
                 return Arrays.asList(new String[] {
-                    "ts_lines",
-                    "ts_cols",
-                    "ts_xxx",
-                    "ts_yyy",
+                    "ws_row",
+                    "ws_col",
+                    "ws_xpixel",
+                    "ws_ypixel",
                 });
             }
-            public short ts_lines;
-            public short ts_cols;
-            public short ts_xxx;
-            public short ts_yyy;
+            public short ws_row;
+            public short ws_col;
+            public short ws_xpixel;
+            public short ws_ypixel;
         }
 
         public static class TermiosStruct extends Structure {
@@ -63,7 +63,7 @@ public class CursoryUnix extends Cursory {
         public static native void cfmakeraw(TermiosStruct termios_p);
         public static native int isatty(int fd);
         public static native int ioctl(int fd, long request,
-                                       TtysizeStruct ttysize_p)
+                                       WinsizeStruct ttysize_p)
             throws LastErrorException;
     }
 
@@ -99,11 +99,11 @@ public class CursoryUnix extends Cursory {
     public void restoreMode() throws Exception { useMode(origMode); }
 
     public XY getSize() throws Exception {
-        TermiosNative.TtysizeStruct ts = new TermiosNative.TtysizeStruct();
-        if (TermiosNative.ioctl(this.fd, TermiosNative.TIOCGWINSZ, ts) ==
+        TermiosNative.WinsizeStruct ws = new TermiosNative.WinsizeStruct();
+        if (TermiosNative.ioctl(this.fd, TermiosNative.TIOCGWINSZ, ws) ==
             -1) {
             throw new Exception("TIOCGWINSZ");
         }
-        return new XY(ts.ts_cols, ts.ts_lines);
+        return new XY(ws.ws_col, ws.ws_row);
     }
 }
