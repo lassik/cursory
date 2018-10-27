@@ -12,7 +12,7 @@
   `(let [cursory# ~cursory]
      (try (do (.enableRawMode cursory#)
               ~@body)
-          (.restoreMode cursory#))))
+          (finally (.restoreMode cursory#)))))
 
 (defn read-event [^Cursory cursory]
   (let [event (.readEvent cursory)
