@@ -3,6 +3,12 @@ package cursory;
 import com.sun.jna.Platform;
 
 public abstract class Cursory implements AutoCloseable {
+
+    public class Event {
+        public String eventType;
+        public String which;
+    }
+
     public class XY {
         public int x;
         public int y;

@@ -106,4 +106,16 @@ public class CursoryUnix extends Cursory {
         }
         return new XY(ws.ws_col, ws.ws_row);
     }
+
+    public Event readEvent() throws Exception {
+        Event e = new Event();
+        int byt = System.in.read(); // TODO: Support fd's other than stdin.
+        if (byt == -1) {
+            e.eventType = "";
+        } else {
+            e.eventType = "char";
+            e.which = new String(new byte[] {(byte)byt});
+        }
+        return e;
+    }
 }
