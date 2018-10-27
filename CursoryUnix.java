@@ -7,7 +7,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 import com.sun.jna.Structure;
 
-public class Termios implements AutoCloseable {
+public class CursoryUnix implements AutoCloseable {
 
     public static class TermiosNative {
         static final String libc = "c";
@@ -72,7 +72,7 @@ public class Termios implements AutoCloseable {
     private int fd;
     private TermiosNative.TermiosStruct origMode = null;
 
-    public Termios(int fileDescriptor) throws Exception {
+    public CursoryUnix(int fileDescriptor) throws Exception {
         this.fd = fileDescriptor;
         this.origMode = new TermiosNative.TermiosStruct();
         if (TermiosNative.tcgetattr(this.fd, this.origMode) == -1)

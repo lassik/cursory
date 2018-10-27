@@ -1,6 +1,6 @@
 (ns cursory
-  (:import Termios))
+  (:import CursoryUnix))
 
 (defn get-size []
-  (let [size (-> (new Termios 0) .getSize)]
+  (let [size (-> (new CursoryUnix 0) .getSize)]
     [(-> size .x) (-> size .y)]))
