@@ -1,2 +1,3 @@
 *.class
+/clojure/.cpcache
 /print_const

@@ -1,0 +1,2 @@
+{:paths ["." ".."]
+ :deps {net.java.dev.jna/jna {:mvn/version "4.0.0"}}}
