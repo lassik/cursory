@@ -61,7 +61,7 @@ public class CursoryUnix extends Cursory {
                                            TermiosStruct termios_p)
             throws LastErrorException;
         public static native void cfmakeraw(TermiosStruct termios_p);
-        public static native int isatty(int fd) throws LastErrorException;
+        public static native int isatty(int fd);
         public static native int ioctl(int fd, long request,
                                        TtysizeStruct ttysize_p)
             throws LastErrorException;
