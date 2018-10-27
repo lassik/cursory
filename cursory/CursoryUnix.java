@@ -1,3 +1,5 @@
+package cursory;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,7 +9,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 import com.sun.jna.Structure;
 
-public class CursoryUnix implements AutoCloseable {
+public class CursoryUnix extends Cursory {
 
     public static class TermiosNative {
         static final String libc = "c";
@@ -65,7 +67,7 @@ public class CursoryUnix implements AutoCloseable {
             throws LastErrorException;
     }
 
-    public static boolean isatty(int fileDescriptor) {
+    public static boolean isatty(int fileDescriptor) throws Exception {
         return TermiosNative.isatty(fileDescriptor) != 0;
     }
 
@@ -95,17 +97,6 @@ public class CursoryUnix implements AutoCloseable {
     }
 
     public void restoreMode() throws Exception { useMode(origMode); }
-
-    public void close() throws Exception { restoreMode(); }
-
-    public class XY {
-        public int x;
-        public int y;
-        public XY(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
 
     public XY getSize() throws Exception {
         TermiosNative.TtysizeStruct ts = new TermiosNative.TtysizeStruct();
