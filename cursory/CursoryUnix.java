@@ -164,6 +164,12 @@ public class CursoryUnix extends Cursory {
         m.put("[17~", "F6");
         m.put("[18~", "F7");
         m.put("[19~", "F8");
+        m.put("[1;2A", "shift-up");
+        m.put("[1;2B", "shift-down");
+        m.put("[1;2C", "shift-right");
+        m.put("[1;2D", "shift-left");
+        m.put("[1;2F", "shift-end");
+        m.put("[1;2H", "shift-home");
         m.put("[1;2P", "printscreen");
         m.put("[20~", "F9");
         m.put("[21~", "F10");
@@ -176,6 +182,7 @@ public class CursoryUnix extends Cursory {
         m.put("[D", "left");
         m.put("[F", "end");
         m.put("[H", "home");
+        m.put("[Z", "shift-tab");
         m.put("OF", "end");
         m.put("OH", "home");
         m.put("OP", "F1");
