@@ -20,6 +20,6 @@
     (case (.eventType event)
       "" true
       "char" which
-      "specialkey" true
+      "specialkey" which
       "mousebutton" true
       "resize" true)))
