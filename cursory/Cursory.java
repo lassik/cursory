@@ -7,6 +7,11 @@ public abstract class Cursory implements AutoCloseable {
     public class Event {
         public String eventType;
         public String which;
+        public Event(String eventType, String which) {
+            this.eventType = eventType;
+            this.which = which;
+        }
+        public Event() { this("", ""); }
     }
 
     public class XY {

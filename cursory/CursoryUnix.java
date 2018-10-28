@@ -1,7 +1,10 @@
 package cursory;
 
+import java.lang.StringBuilder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
@@ -83,9 +86,11 @@ public class CursoryUnix extends Cursory {
             throws LastErrorException;
     }
 
-    private static final int TIMEOUT_MS = 100;
+    private static final int TIMEOUT_MS = 50;
     private TermiosNative.PollfdStruct pollfd =
         new TermiosNative.PollfdStruct();
+
+    // TODO: Support fd's other than stdin.
 
     private int readByte() throws Exception { return System.in.read(); }
 
@@ -140,70 +145,97 @@ public class CursoryUnix extends Cursory {
         return new XY(ws.ws_col, ws.ws_row);
     }
 
-    private String readEscBracket() throws Exception {
+    private static final Map<Integer, String> specialControlMap;
+    static {
+        Map<Integer, String> m = new HashMap<Integer, String>();
+        m.put(0x08, "backspace");
+        m.put(0x09, "tab");
+        m.put(0x0a, "return");
+        m.put(0x0d, "return");
+        m.put(0x7f, "backspace");
+        specialControlMap = m;
+    }
+
+    private static final Map<String, String> escapeMap;
+    static {
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("", "escape");
+        m.put("[15~", "F5");
+        m.put("[17~", "F6");
+        m.put("[18~", "F7");
+        m.put("[19~", "F8");
+        m.put("[1;2P", "printscreen");
+        m.put("[20~", "F9");
+        m.put("[21~", "F10");
+        m.put("[3~", "delete");
+        m.put("[5~", "pageup");
+        m.put("[6~", "pagedown");
+        m.put("[A", "up");
+        m.put("[B", "down");
+        m.put("[C", "right");
+        m.put("[D", "left");
+        m.put("[F", "end");
+        m.put("[H", "home");
+        m.put("OF", "end");
+        m.put("OH", "home");
+        m.put("OP", "F1");
+        m.put("OQ", "F2");
+        m.put("OR", "F3");
+        m.put("OS", "F4");
+        escapeMap = m;
+    }
+
+    private String readEscape() throws Exception {
         int byt = readByteWithTimeout();
-        if ((byt >= '0') && (byt <= '9') && (readByteWithTimeout() != '~')) {
+        if (byt == -1) {
+            return "";
+        }
+        if ((byt != 'O') && (byt != '[')) {
             return null;
         }
-        switch (byt) {
-        case '3':
-            return "delete";
-        case '5':
-            return "pageup";
-        case '6':
-            return "pagedown";
-        case 'A':
-            return "up";
-        case 'B':
-            return "down";
-        case 'C':
-            return "right";
-        case 'D':
-            return "left";
-        case 'H':
-            return "home";
-        case 'F':
-            return "end";
-        }
-        return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append((char)byt);
+        do {
+            byt = readByteWithTimeout();
+            if ((byt == -1) || (sb.length() > 8)) {
+                return null;
+            }
+            sb.append((char)byt);
+        } while ((byt == ';') || ((byt >= '0') && (byt <= '9')));
+        return sb.toString();
     }
 
-    private String readEscO() throws Exception {
-        switch (readByteWithTimeout()) {
-        case 'H':
-            return "home";
-        case 'F':
-            return "end";
+    private Event escape() throws Exception {
+        String which = escapeMap.get(readEscape());
+        if (which != null) {
+            return new Event("specialkey", which);
         }
-        return null;
+        return new Event();
     }
 
-    private String readEsc() throws Exception {
-        switch (readByteWithTimeout()) {
-        case '[':
-            return readEscBracket();
-        case 'O':
-            return readEscO();
-        case -1:
-            return "escape";
+    private Event control(int byt) {
+        String which = specialControlMap.get(byt);
+        if (which != null) {
+            return new Event("specialkey", which);
         }
-        return null;
+        which = String.valueOf((char)(0x40 + byt));
+        return new Event("controlkey", which);
     }
 
     public Event readEvent() throws Exception {
-        // TODO: Support fd's other than stdin.
-        Event e = new Event();
         int byt = readByte();
-        if (byt == -1) {
-            e.eventType = "";
-            e.which = null;
+        if (byt < 0x01) {
+            return new Event();
+        } else if (byt < 0x1b) {
+            return control(byt);
         } else if (byt == 0x1b) {
-            e.eventType = "specialkey";
-            e.which = readEsc();
+            return escape();
+        } else if (byt < 0x20) {
+            return new Event();
+        } else if (byt < 0x7f) {
+            return new Event("char", String.valueOf((char)byt));
         } else {
-            e.eventType = "char";
-            e.which = new String(new byte[] {(byte)byt});
+            return control(byt);
         }
-        return e;
     }
 }

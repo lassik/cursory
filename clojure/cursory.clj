@@ -18,8 +18,9 @@
   (let [event (.readEvent cursory)
         which (.which event)]
     (case (.eventType event)
-      "" true
+      "" "(none)"
       "char" which
+      "controlkey" (str "Control-" which)
       "specialkey" which
       "mousebutton" true
       "resize" true)))
