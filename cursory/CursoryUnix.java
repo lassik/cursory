@@ -159,11 +159,16 @@ public class CursoryUnix extends Cursory {
     private static final Map<String, String> escapeMap;
     static {
         Map<String, String> m = new HashMap<String, String>();
+
         m.put("", "escape");
         m.put("[15~", "F5");
         m.put("[17~", "F6");
         m.put("[18~", "F7");
         m.put("[19~", "F8");
+        m.put("[1;10A", "alt-shift-up");
+        m.put("[1;10B", "alt-shift-down");
+        m.put("[1;10C", "alt-shift-right");
+        m.put("[1;10D", "alt-shift-left");
         m.put("[1;2A", "shift-up");
         m.put("[1;2B", "shift-down");
         m.put("[1;2C", "shift-right");
@@ -171,8 +176,18 @@ public class CursoryUnix extends Cursory {
         m.put("[1;2F", "shift-end");
         m.put("[1;2H", "shift-home");
         m.put("[1;2P", "printscreen");
+        m.put("[1;5A", "control-alt-up");
+        m.put("[1;5B", "control-alt-down");
+        m.put("[1;5C", "control-alt-right");
+        m.put("[1;5D", "control-alt-left");
+        m.put("[1;6A", "control-shift-up");
+        m.put("[1;6B", "control-shift-down");
+        m.put("[1;6C", "control-shift-right");
+        m.put("[1;6D", "control-shift-left");
         m.put("[20~", "F9");
         m.put("[21~", "F10");
+        m.put("[23~", "F11");
+        m.put("[24~", "F12");
         m.put("[3~", "delete");
         m.put("[5~", "pageup");
         m.put("[6~", "pagedown");
@@ -180,15 +195,39 @@ public class CursoryUnix extends Cursory {
         m.put("[B", "down");
         m.put("[C", "right");
         m.put("[D", "left");
+        m.put("[e", "F19");
         m.put("[F", "end");
+        m.put("[f", "F20");
+        m.put("[g", "F21");
+        m.put("[h", "F22");
         m.put("[H", "home");
+        m.put("[i", "F23");
+        m.put("[j", "F24");
+        m.put("[k", "F25");
+        m.put("[l", "F26");
+        m.put("[m", "F27");
+        m.put("[n", "F28");
+        m.put("[o", "F29");
+        m.put("[p", "F30");
+        m.put("[q", "F31");
+        m.put("[r", "F32");
+        m.put("[s", "F33");
+        m.put("[t", "F34");
+        m.put("[u", "F35");
+        m.put("[v", "F36");
+        m.put("[w", "F37");
+        m.put("[x", "F38");
+        m.put("[y", "F39");
+        m.put("[z", "F40");
         m.put("[Z", "shift-tab");
+        m.put("[{", "F48");
         m.put("OF", "end");
         m.put("OH", "home");
         m.put("OP", "F1");
         m.put("OQ", "F2");
         m.put("OR", "F3");
         m.put("OS", "F4");
+
         escapeMap = m;
     }
 
