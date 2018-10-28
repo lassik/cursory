@@ -229,6 +229,40 @@ public class CursoryUnix extends Cursory {
         return new Event("controlkey", which);
     }
 
+    private Event utf8Rune(int byt) throws Exception {
+        int rune, cont;
+        if (byt < 0) {
+            return new Event();
+        } else if (byt < 0b10000000) {
+            rune = byt;
+            cont = 0;
+        } else if (byt < 0b11000000) {
+            return new Event();
+        } else if (byt < 0b11100000) {
+            rune = byt & 0b00011111;
+            cont = 1;
+        } else if (byt < 0b11110000) {
+            rune = byt & 0b00001111;
+            cont = 2;
+        } else if (byt < 0b11111000) {
+            rune = byt & 0b00000111;
+            cont = 3;
+        } else {
+            return new Event();
+        }
+        for (; cont > 0; cont--) {
+            byt = readByteWithTimeout();
+            if (byt < 0b10000000) {
+                return new Event();
+            } else if (byt < 0b11000000) {
+                rune = (rune << 6) | byt & 0b00111111;
+            } else {
+                return new Event();
+            }
+        }
+        return new Event("rune", new String(Character.toChars(rune)));
+    }
+
     public Event readEvent() throws Exception {
         int byt = readByte();
         if (byt < 0x01) {
@@ -240,9 +274,11 @@ public class CursoryUnix extends Cursory {
         } else if (byt < 0x20) {
             return new Event();
         } else if (byt < 0x7f) {
-            return new Event("char", String.valueOf((char)byt));
-        } else {
+            return utf8Rune(byt);
+        } else if (byt == 0x7f) {
             return control(byt);
+        } else {
+            return utf8Rune(byt);
         }
     }
 }

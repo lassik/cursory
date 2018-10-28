@@ -19,7 +19,7 @@
         which (.which event)]
     (case (.eventType event)
       "" "(none)"
-      "char" which
+      "rune" which
       "controlkey" (str "Control-" which)
       "specialkey" which
       "mousebutton" true
