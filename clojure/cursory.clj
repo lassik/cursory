@@ -22,5 +22,5 @@
       "rune" which
       "controlkey" (str "Control-" which)
       "specialkey" which
-      "mousebutton" true
-      "resize" true)))
+      "mousebutton" "mousebutton"
+      "resize" "resize")))
