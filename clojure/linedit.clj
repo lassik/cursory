@@ -3,6 +3,8 @@
 
 (def initial-state {:text "" :pos 0 :start 0 :limit 0})
 
+(defn reset-state [st] (merge st initial-state))
+
 (defn clamp [pos st]
   (let [len (count (:text st))]
     (max 0 (min len pos))))
@@ -137,7 +139,7 @@
 
 (defn cmd-return [st]
   (println)
-  initial-state)
+  (reset-state st))
 
 (defn cmd-interrupt [st]
   (println)
@@ -185,10 +187,9 @@
 (def cursor-top-left (esc "[H"))
 (defn cursor-backward [n] (if (> n 0) (esc "[" n "D") ""))
 
-(def prompt "> ")
-
 (defn realize-state [st]
-  (let [ansi (str
+  (let [prompt ((or (-> st :config :prompt) (constantly "> ")) st)
+        ansi (str
               prompt
               (:text st)
               (cursor-backward (- (count (:text st)) (:pos st))))
@@ -204,10 +205,10 @@
              (str (cursor-backward old-column) erase-line)))
     new-state))
 
-(defn run []
+(defn run [config]
   (let [t (get-terminal)]
     (with-raw-mode t
-      (loop [st initial-state]
+      (loop [st (assoc initial-state :config config)]
         (let [[ansi column] (realize-state st)]
           (print ansi)
           (flush)
@@ -215,5 +216,7 @@
                 st (unrealize-state column ((command event) st))]
             (when st (recur st))))))))
 
+;;
+
 (defn -main [prog]
-  (run))
+  (run {:prompt (fn [st] "partycat> ")}))
