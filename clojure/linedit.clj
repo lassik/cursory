@@ -173,6 +173,8 @@
     "Delete" cmd-delete-char-forward
     "Left" cmd-move-char-backward
     "Right" cmd-move-char-forward
+    "Home" cmd-move-line-backward
+    "End" cmd-move-line-forward
     (if (= 1 (count event)) (partial type-text event) identity)))
 
 ;;
