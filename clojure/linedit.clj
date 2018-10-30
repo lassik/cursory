@@ -1,7 +1,8 @@
 (ns linedit
+  (:require [clojure.string :as string])
   (:use cursory))
 
-(def initial-state {:text "" :pos 0 :start 0 :limit 0})
+(def initial-state {:text "" :pos 0 :start 0 :limit 0 :histpos 0})
 
 (defn reset-state [st] (merge st initial-state))
 
@@ -128,18 +129,25 @@
         new-pos (+ old-pos (count typed-text))]
     (update-pos (constantly new-pos) (assoc st :text new-text))))
 
-(defn cmd-history-next [st]
-  st)
+(defn history-common [update-fn st]
+  (let [newpos (max 0 (update-fn (:histpos st)))
+        newtext (if (= 0 newpos)
+                  (:text st)
+                  ((-> st :config :history :get) st (dec newpos)))]
+    (if newtext
+      (assoc (reset-state st) :histpos newpos :text newtext)
+      st)))
 
-(defn cmd-history-prev [st]
-  st)
+(def cmd-history-prev (partial history-common inc))
+
+(def cmd-history-next (partial history-common dec))
 
 (defn cmd-complete [st]
   st)
 
 (defn cmd-return [st]
   (println)
-  (reset-state st))
+  (reset-state ((-> st :config :history :add) st (:text st))))
 
 (defn cmd-interrupt [st]
   (println)
@@ -173,6 +181,8 @@
     "Return" cmd-return
     "Backspace" cmd-delete-char-backward
     "Delete" cmd-delete-char-forward
+    "Up" cmd-history-prev
+    "Down" cmd-history-next
     "Left" cmd-move-char-backward
     "Right" cmd-move-char-forward
     "Home" cmd-move-line-backward
@@ -218,5 +228,14 @@
 
 ;;
 
+(def natural-history
+  {:items []
+   :get (fn [st i] (first (nthnext (-> st :config :history :items) i)))
+   :add (fn [st s]
+          (if (string/blank? s)
+            st
+            (update-in st [:config :history :items]
+                       (fn [items] (conj (remove (partial = s) items) s)))))})
+
 (defn -main [prog]
-  (run {:prompt (fn [st] "partycat> ")}))
+  (run {:history natural-history :prompt (constantly "partycat> ")}))
