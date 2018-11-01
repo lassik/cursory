@@ -6,7 +6,7 @@
 
 (defn get-size [^Cursory cursory]
   (let [size (.getSize cursory)]
-    [(.x size) (.y size)]))
+    (when size [(.x size) (.y size)])))
 
 (defmacro with-raw-mode [cursory & body]
   `(let [cursory# ~cursory]
