@@ -323,9 +323,13 @@ public class CursoryUnix extends Cursory {
         }
     }
 
-    public XY getCursorPos() throws Exception {
-        System.out.print("\u001b[6n");
+    private void writeEscape(String esc) {
+        System.out.print("\u001b" + esc);
         System.out.flush();
+    }
+
+    public XY getCursorPos() throws Exception {
+        writeEscape("[6n");
         byte[] escbuf = new byte[16];
         int len = System.in.read(escbuf);
         if (len < 1) {
