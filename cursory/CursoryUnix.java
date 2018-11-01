@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
@@ -319,5 +321,24 @@ public class CursoryUnix extends Cursory {
         } else {
             return utf8Rune(byt);
         }
+    }
+
+    public XY getCursorPos() throws Exception {
+        System.out.print("\u001b[6n");
+        System.out.flush();
+        byte[] escbuf = new byte[16];
+        int len = System.in.read(escbuf);
+        if (len < 1) {
+            return null;
+        }
+        String esc = new String(escbuf).substring(0, len);
+        Pattern p = Pattern.compile("\u001b\\[(\\d+);(\\d+)R");
+        Matcher m = p.matcher(esc);
+        if (!m.matches()) {
+            return null;
+        }
+        int x = Integer.parseInt(m.group(1));
+        int y = Integer.parseInt(m.group(2));
+        return new XY(x, y);
     }
 }

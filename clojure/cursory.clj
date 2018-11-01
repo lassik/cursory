@@ -8,6 +8,10 @@
   (let [size (.getSize cursory)]
     (when size [(.x size) (.y size)])))
 
+(defn get-cursor-pos [^Cursory cursory]
+  (let [pos (.getCursorPos cursory)]
+    (when pos [(.x pos) (.y pos)])))
+
 (defmacro with-raw-mode [cursory & body]
   `(let [cursory# ~cursory]
      (try (do (.enableRawMode cursory#)
