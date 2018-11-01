@@ -2,9 +2,9 @@ package cursory;
 
 import java.lang.StringBuilder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
