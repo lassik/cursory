@@ -24,7 +24,6 @@
     (case (.eventType event)
       "" "(none)"
       "rune" which
-      "controlkey" (str "Control-" which)
       "specialkey" which
       "mousebutton" "mousebutton"
       "resize" "resize")))

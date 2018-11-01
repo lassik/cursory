@@ -267,7 +267,7 @@ public class CursoryUnix extends Cursory {
             return new Event("specialkey", which);
         }
         which = String.valueOf((char)(0x40 + byt));
-        return new Event("controlkey", which);
+        return new Event("specialkey", "Control-" + which);
     }
 
     private Event utf8Rune(int byt) throws Exception {
