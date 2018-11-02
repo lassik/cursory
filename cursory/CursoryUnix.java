@@ -248,6 +248,9 @@ public class CursoryUnix extends Cursory {
             if ((byt == -1) || (sb.length() > 8)) {
                 return null;
             }
+            if (byt == ':') {
+                byt = ';';
+            }
             sb.append((char)byt);
         } while ((byt == ';') || ((byt >= '0') && (byt <= '9')));
         return sb.toString();
