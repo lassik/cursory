@@ -26,6 +26,7 @@ public abstract class Cursory implements AutoCloseable {
     abstract public XY getSize() throws Exception;
     abstract public void restoreMode() throws Exception;
     abstract public void enableRawMode() throws Exception;
+    abstract public void render(Iterable<RenderAction> actions);
     public void close() throws Exception { restoreMode(); }
 
     public static boolean isTerminal(int fileDescriptor) throws Exception {

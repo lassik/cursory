@@ -371,4 +371,26 @@ public class CursoryUnix extends Cursory {
         int y = Integer.parseInt(m.group(2));
         return new XY(x, y);
     }
+
+    public void render(Iterable<RenderAction> actions) {
+        for (RenderAction action : actions) {
+            switch (action.actionType) {
+            case "clearToLineEnd":
+                writeEscape("[2K");
+                break;
+            case "clearToScreenEnd":
+                writeEscape("[J");
+                break;
+            case "goAbs":
+                if (action.x == 0 && action.y == 0) {
+                    writeEscape("[H");
+                }
+                break;
+            case "text":
+                writeOrdinaryText(action.s);
+                break;
+            }
+        }
+        System.out.flush();
+    }
 }

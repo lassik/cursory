@@ -1,5 +1,6 @@
 (ns cursory
-  (:import cursory.Cursory))
+  (:require [clojure.core.match :refer [match]])
+  (:import cursory.Cursory cursory.RenderAction))
 
 (defn get-terminal []
   (Cursory/getTerminal 0))
@@ -27,3 +28,17 @@
       "specialkey" which
       "mousebutton" "mousebutton"
       "resize" "resize")))
+
+(defn render! [^Cursory cursory actions]
+  (. cursory render
+     (map (fn [action]
+            (match action
+              [:clear-to-line-end]
+              (RenderAction/clearToLineEnd)
+              [:clear-to-screen-end]
+              (RenderAction/clearToScreenEnd)
+              [:go-abs x y]
+              (RenderAction/goAbs ^int x ^int y)
+              [:text s]
+              (RenderAction/text ^String s)))
+          actions)))
