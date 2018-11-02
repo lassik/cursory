@@ -46,3 +46,17 @@
               [:text s]
               (RenderAction/text ^String s)))
           actions)))
+
+(def clear-screen [[:set-background-color "default"]
+                   [:set-foreground-color "default"]
+                   [:go-abs 0 0]
+                   [:clear-to-screen-end]])
+
+(defn run-app! [^Cursory cursory initial-model update-model view-model]
+  (with-raw-mode cursory
+    (loop [model initial-model]
+      (render! cursory (concat clear-screen (view-model model)))
+      (let [event (read-event cursory)
+            new-model (update-model model event)]
+        (when new-model (recur new-model))))
+    (render! cursory clear-screen)))
