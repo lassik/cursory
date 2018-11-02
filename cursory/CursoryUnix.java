@@ -326,13 +326,36 @@ public class CursoryUnix extends Cursory {
         }
     }
 
+    private boolean isOrdinaryChar(char c) {
+        if (c < 0x20) {
+            return false;
+        } else if (c < 0x7f) {
+            return true;
+        } else if (c == 0x7f) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void writeOrdinaryText(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!isOrdinaryChar(c)) {
+                c = '?';
+            }
+            System.out.print(c);
+        }
+    }
+
     private void writeEscape(String esc) {
-        System.out.print("\u001b" + esc);
-        System.out.flush();
+        System.out.print("\u001b");
+        writeOrdinaryText(esc);
     }
 
     public XY getCursorPos() throws Exception {
         writeEscape("[6n");
+        System.out.flush();
         byte[] escbuf = new byte[16];
         int len = System.in.read(escbuf);
         if (len < 1) {
