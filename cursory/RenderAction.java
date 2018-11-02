@@ -39,4 +39,8 @@ public class RenderAction {
     public static RenderAction text(String s) {
         return new RenderAction("text", s, null, 0, 0);
     }
+
+    public static RenderAction boxChar(String s, int x) {
+        return new RenderAction("boxChar", s, null, x, 0);
+    }
 }

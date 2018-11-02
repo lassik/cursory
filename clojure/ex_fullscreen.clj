@@ -18,6 +18,9 @@
    [:set-background-color "default"]
    [:set-foreground-color "cyan"]
    [:text (str " {" model "}")]
+   [:box-char "horz" 5]
+   [:box-char "vert" 5]
+   [:box-char "cross" 5]
    [:set-background-color "default"]])
 
 (defn -main [args]

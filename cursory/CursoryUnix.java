@@ -419,6 +419,27 @@ public class CursoryUnix extends Cursory {
             case "text":
                 writeOrdinaryText(action.s);
                 break;
+            case "boxChar":
+                for (int i = 0; i < action.x; i++) {
+                    String ch = "";
+                    switch (action.s) {
+                    case "horz":
+                        ch = "\u2500";
+                        break;
+                    case "vert":
+                        ch = "\u2502";
+                        break;
+                    case "cross":
+                        ch = "\u253c";
+                        break;
+                    default:
+                        break;
+                    }
+                    writeOrdinaryText(ch);
+                }
+                break;
+            default:
+                break;
             }
         }
         System.out.flush();

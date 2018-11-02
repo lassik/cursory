@@ -44,7 +44,9 @@
               [:set-foreground-color color]
               (RenderAction/setForegroundColor color)
               [:text s]
-              (RenderAction/text ^String s)))
+              (RenderAction/text ^String s)
+              [:box-char s n]
+              (RenderAction/boxChar s n)))
           actions)))
 
 (def clear-screen [[:set-background-color "default"]
