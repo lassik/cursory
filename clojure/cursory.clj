@@ -39,6 +39,10 @@
               (RenderAction/clearToScreenEnd)
               [:go-abs x y]
               (RenderAction/goAbs ^int x ^int y)
+              [:set-background-color color]
+              (RenderAction/setBackgroundColor color)
+              [:set-foreground-color color]
+              (RenderAction/setForegroundColor color)
               [:text s]
               (RenderAction/text ^String s)))
           actions)))

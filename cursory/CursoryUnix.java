@@ -372,6 +372,30 @@ public class CursoryUnix extends Cursory {
         return new XY(x, y);
     }
 
+    private static final Map<String, Integer> colorMap;
+    static {
+        Map<String, Integer> m = new HashMap<String, Integer>();
+        m.put("black", 0);
+        m.put("red", 1);
+        m.put("green", 2);
+        m.put("yellow", 3);
+        m.put("blue", 4);
+        m.put("magenta", 5);
+        m.put("cyan", 6);
+        m.put("white", 7);
+        //
+        m.put("default", 9);
+        colorMap = m;
+    }
+
+    public String colorEscape(int base, String colorName) {
+        Integer index = colorMap.get(colorName);
+        if (index == null) {
+            return null;
+        }
+        return "[" + new Integer(base + index).toString() + "m";
+    }
+
     public void render(Iterable<RenderAction> actions) {
         for (RenderAction action : actions) {
             switch (action.actionType) {
@@ -380,6 +404,12 @@ public class CursoryUnix extends Cursory {
                 break;
             case "clearToScreenEnd":
                 writeEscape("[J");
+                break;
+            case "setBackgroundColor":
+                writeEscape(colorEscape(40, action.s));
+                break;
+            case "setForegroundColor":
+                writeEscape(colorEscape(30, action.s));
                 break;
             case "goAbs":
                 if (action.x == 0 && action.y == 0) {

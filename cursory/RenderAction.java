@@ -28,6 +28,14 @@ public class RenderAction {
         return new RenderAction("goAbs", null, null, x, y);
     }
 
+    public static RenderAction setBackgroundColor(String color) {
+        return new RenderAction("setBackgroundColor", color, null, 0, 0);
+    }
+
+    public static RenderAction setForegroundColor(String color) {
+        return new RenderAction("setForegroundColor", color, null, 0, 0);
+    }
+
     public static RenderAction text(String s) {
         return new RenderAction("text", s, null, 0, 0);
     }
