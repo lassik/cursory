@@ -338,13 +338,16 @@ public class CursoryUnix extends Cursory {
         }
     }
 
+    private void writeOrdinaryChar(char c) {
+        if (!isOrdinaryChar(c)) {
+            c = '?';
+        }
+        System.out.print(c);
+    }
+
     private void writeOrdinaryText(String s) {
         for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (!isOrdinaryChar(c)) {
-                c = '?';
-            }
-            System.out.print(c);
+            writeOrdinaryChar(s.charAt(i));
         }
     }
 
