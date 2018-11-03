@@ -353,6 +353,14 @@ public class CursoryUnix extends Cursory {
         writeOrdinaryText(esc);
     }
 
+    private void writeEscapeNumbers(int a, int b, char ch) {
+        if ((a >= 0) && (b >= 0)) {
+            System.out.print("\u001b");
+            writeOrdinaryText("[" + String.valueOf(a) + ";" +
+                              String.valueOf(b) + String.valueOf(ch));
+        }
+    }
+
     public XY getCursorPos() throws Exception {
         writeEscape("[6n");
         System.out.flush();
@@ -414,6 +422,8 @@ public class CursoryUnix extends Cursory {
             case "goAbs":
                 if (action.x == 0 && action.y == 0) {
                     writeEscape("[H");
+                } else {
+                    writeEscapeNumbers(1 + action.y, 1 + action.x, 'H');
                 }
                 break;
             case "text":
@@ -431,6 +441,18 @@ public class CursoryUnix extends Cursory {
                         break;
                     case "cross":
                         ch = "\u253c";
+                        break;
+                    case "corner-top-left":
+                        ch = "\u250c";
+                        break;
+                    case "corner-top-right":
+                        ch = "\u2510";
+                        break;
+                    case "corner-bottom-left":
+                        ch = "\u2514";
+                        break;
+                    case "corner-bottom-right":
+                        ch = "\u2518";
                         break;
                     default:
                         break;

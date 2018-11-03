@@ -45,6 +45,8 @@
               (RenderAction/setForegroundColor color)
               [:text s]
               (RenderAction/text ^String s)
+              [:box-char s]
+              (RenderAction/boxChar s 1)
               [:box-char s n]
               (RenderAction/boxChar s n)))
           actions)))
