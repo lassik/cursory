@@ -401,7 +401,7 @@ public class CursoryUnix extends Cursory {
         if (index == null) {
             return null;
         }
-        return "[" + new Integer(base + index).toString() + "m";
+        return "[" + String.valueOf(base + index) + "m";
     }
 
     public void render(Iterable<RenderAction> actions) {
