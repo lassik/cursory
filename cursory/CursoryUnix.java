@@ -404,6 +404,35 @@ public class CursoryUnix extends Cursory {
         return "[" + String.valueOf(base + index) + "m";
     }
 
+    private static final Map<String, String[]> boxCharMap;
+    static {
+        Map<String, String[]> m = new HashMap<String, String[]>();
+        m.put("horz", new String[] {"q", "\u2500", "\u2550"});
+        m.put("vert", new String[] {"x", "\u2502", "\u2551"});
+        m.put("cross", new String[] {"n", "\u253c", "\u256c"});
+        m.put("corner-top-left", new String[] {"l", "\u250c", "\u2554"});
+        m.put("corner-top-right", new String[] {"k", "\u2510", "\u2557"});
+        m.put("corner-bottom-left", new String[] {"m", "\u2514", "\u255a"});
+        m.put("corner-bottom-right", new String[] {"j", "\u2518", "\u255d"});
+        boxCharMap = m;
+    }
+
+    private String boxChar(String charName, String style, boolean vt100) {
+        int i;
+        if (vt100) {
+            i = 0;
+        } else if ((style == null) || !style.equals("double")) {
+            i = 1;
+        } else {
+            i = 2;
+        }
+        String[] chars = boxCharMap.get(charName);
+        if (chars == null) {
+            return "";
+        }
+        return chars[i];
+    }
+
     public void render(Iterable<RenderAction> actions) {
         for (RenderAction action : actions) {
             switch (action.actionType) {
@@ -430,66 +459,12 @@ public class CursoryUnix extends Cursory {
                 writeOrdinaryText(action.s);
                 break;
             case "boxChar":
+                String ch = boxChar(action.s, action.t, true);
+                writeEscape("(0");
                 for (int i = 0; i < action.x; i++) {
-                    String ch = "";
-                    switch (action.t) {
-                    case "":
-                        switch (action.s) {
-                        case "horz":
-                            ch = "\u2500";
-                            break;
-                        case "vert":
-                            ch = "\u2502";
-                            break;
-                        case "cross":
-                            ch = "\u253c";
-                            break;
-                        case "corner-top-left":
-                            ch = "\u250c";
-                            break;
-                        case "corner-top-right":
-                            ch = "\u2510";
-                            break;
-                        case "corner-bottom-left":
-                            ch = "\u2514";
-                            break;
-                        case "corner-bottom-right":
-                            ch = "\u2518";
-                            break;
-                        default:
-                            break;
-                        }
-                        break;
-                    case "double":
-                        switch (action.s) {
-                        case "horz":
-                            ch = "\u2550";
-                            break;
-                        case "vert":
-                            ch = "\u2551";
-                            break;
-                        case "cross":
-                            ch = "\u256c";
-                            break;
-                        case "corner-top-left":
-                            ch = "\u2554";
-                            break;
-                        case "corner-top-right":
-                            ch = "\u2557";
-                            break;
-                        case "corner-bottom-left":
-                            ch = "\u255a";
-                            break;
-                        case "corner-bottom-right":
-                            ch = "\u255d";
-                            break;
-                        default:
-                            break;
-                        }
-                        break;
-                    }
                     writeOrdinaryText(ch);
                 }
+                writeEscape("(B");
                 break;
             default:
                 break;
