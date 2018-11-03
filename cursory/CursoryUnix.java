@@ -407,20 +407,20 @@ public class CursoryUnix extends Cursory {
         return "[" + String.valueOf(base + index) + "m";
     }
 
-    private static final Map<String, String[]> boxCharMap;
+    private static final Map<String, String> boxCharMap;
     static {
-        Map<String, String[]> m = new HashMap<String, String[]>();
-        m.put("horz", new String[] {"q", "\u2500", "\u2550"});
-        m.put("vert", new String[] {"x", "\u2502", "\u2551"});
-        m.put("cross", new String[] {"n", "\u253c", "\u256c"});
-        m.put("corner-top-left", new String[] {"l", "\u250c", "\u2554"});
-        m.put("corner-top-right", new String[] {"k", "\u2510", "\u2557"});
-        m.put("corner-bottom-left", new String[] {"m", "\u2514", "\u255a"});
-        m.put("corner-bottom-right", new String[] {"j", "\u2518", "\u255d"});
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("horz", "q\u2500\u2550");
+        m.put("vert", "x\u2502\u2551");
+        m.put("cross", "n\u253c\u256c");
+        m.put("corner-top-left", "l\u250c\u2554");
+        m.put("corner-top-right", "k\u2510\u2557");
+        m.put("corner-bottom-left", "m\u2514\u255a");
+        m.put("corner-bottom-right", "j\u2518\u255d");
         boxCharMap = m;
     }
 
-    private String boxChar(String charName, String style, boolean vt100) {
+    private char boxChar(String charName, String style, boolean vt100) {
         int i;
         if (vt100) {
             i = 0;
@@ -429,11 +429,11 @@ public class CursoryUnix extends Cursory {
         } else {
             i = 2;
         }
-        String[] chars = boxCharMap.get(charName);
+        String chars = boxCharMap.get(charName);
         if (chars == null) {
-            return "";
+            return ' ';
         }
-        return chars[i];
+        return chars.charAt(i);
     }
 
     public void render(Iterable<RenderAction> actions) {
@@ -462,10 +462,10 @@ public class CursoryUnix extends Cursory {
                 writeOrdinaryText(action.s);
                 break;
             case "boxChar":
-                String ch = boxChar(action.s, action.t, true);
+                char c = boxChar(action.s, action.t, true);
                 writeEscape("(0");
                 for (int i = 0; i < action.x; i++) {
-                    writeOrdinaryText(ch);
+                    writeOrdinaryChar(c);
                 }
                 writeEscape("(B");
                 break;
