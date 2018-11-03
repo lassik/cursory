@@ -46,9 +46,11 @@
               [:text s]
               (RenderAction/text ^String s)
               [:box-char s]
-              (RenderAction/boxChar s 1)
+              (RenderAction/boxChar s "" 1)
               [:box-char s n]
-              (RenderAction/boxChar s n)))
+              (RenderAction/boxChar s "" n)
+              [:box-char s n style]
+              (RenderAction/boxChar s style n)))
           actions)))
 
 (def clear-screen [[:set-background-color "default"]

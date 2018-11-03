@@ -40,7 +40,7 @@ public class RenderAction {
         return new RenderAction("text", s, null, 0, 0);
     }
 
-    public static RenderAction boxChar(String s, int x) {
-        return new RenderAction("boxChar", s, null, x, 0);
+    public static RenderAction boxChar(String s, String style, int x) {
+        return new RenderAction("boxChar", s, style, x, 0);
     }
 }

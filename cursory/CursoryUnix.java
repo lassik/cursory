@@ -432,29 +432,60 @@ public class CursoryUnix extends Cursory {
             case "boxChar":
                 for (int i = 0; i < action.x; i++) {
                     String ch = "";
-                    switch (action.s) {
-                    case "horz":
-                        ch = "\u2500";
+                    switch (action.t) {
+                    case "":
+                        switch (action.s) {
+                        case "horz":
+                            ch = "\u2500";
+                            break;
+                        case "vert":
+                            ch = "\u2502";
+                            break;
+                        case "cross":
+                            ch = "\u253c";
+                            break;
+                        case "corner-top-left":
+                            ch = "\u250c";
+                            break;
+                        case "corner-top-right":
+                            ch = "\u2510";
+                            break;
+                        case "corner-bottom-left":
+                            ch = "\u2514";
+                            break;
+                        case "corner-bottom-right":
+                            ch = "\u2518";
+                            break;
+                        default:
+                            break;
+                        }
                         break;
-                    case "vert":
-                        ch = "\u2502";
-                        break;
-                    case "cross":
-                        ch = "\u253c";
-                        break;
-                    case "corner-top-left":
-                        ch = "\u250c";
-                        break;
-                    case "corner-top-right":
-                        ch = "\u2510";
-                        break;
-                    case "corner-bottom-left":
-                        ch = "\u2514";
-                        break;
-                    case "corner-bottom-right":
-                        ch = "\u2518";
-                        break;
-                    default:
+                    case "double":
+                        switch (action.s) {
+                        case "horz":
+                            ch = "\u2550";
+                            break;
+                        case "vert":
+                            ch = "\u2551";
+                            break;
+                        case "cross":
+                            ch = "\u256c";
+                            break;
+                        case "corner-top-left":
+                            ch = "\u2554";
+                            break;
+                        case "corner-top-right":
+                            ch = "\u2557";
+                            break;
+                        case "corner-bottom-left":
+                            ch = "\u255a";
+                            break;
+                        case "corner-bottom-right":
+                            ch = "\u255d";
+                            break;
+                        default:
+                            break;
+                        }
                         break;
                     }
                     writeOrdinaryText(ch);
